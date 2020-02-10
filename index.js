@@ -12,17 +12,16 @@ server.get("/", (req, res) => {
 
 // add user
 server.post("/api/users", (req, res)=>{
-    console.log(req.body)
     if (!req.body.name || !req.body.bio) {
         res.status(400).json({errorMessage: "Please provide name and bio for the user."})}
         else {
             const newUser = req.body;
             Users.insert(newUser)
             .then(user =>{
-                res.status(201).json(user)
+                res.status(201).json({...user, ...req.body})
             })
             .catch(err => {
-                res.status(500).json({errorMessage: "something went wrong adding a user"})
+                res.status(500).json({errorMessage: "There was an error while saving the user to the database"})
             }) 
          }
 })
@@ -34,7 +33,7 @@ server.get("/api/users", (req, res)=>{
         res.status(200).json({users})
     })
     .catch(err => {
-        res.status(500).json({errorMessage: "something went wrong getting all users"})
+        res.status(500).json({errorMessage: "The users information could not be retrieved."})
     })
 })
 
