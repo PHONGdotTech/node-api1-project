@@ -40,12 +40,18 @@ server.get("/api/users", (req, res)=>{
 // get a user by id
 server.get(`/api/users/:id`, (req, res)=>{
     const {id} = req.params;
-    Users.findById(6)
-    .then(user =>{
-        res.status(200).json(user)
+    Users.findById(id)
+    .then(user => {
+        if (user){
+            res.status(200).json(user)
+        }
+        else {
+            res.status(404).json({message: "The user with the specified ID does not exist."})
+        }
+        
     })
     .catch(err => {
-        res.status(500).json({errorMessage: "something went wrong getting a specific user by ID"})
+        res.status(500).json({errorMessage: "The user information could not be retrieved."})
     })
 })
 
