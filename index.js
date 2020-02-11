@@ -73,13 +73,15 @@ server.delete(`/api/users/:id`, (req, res)=>{
 
 // update a user with specified id
 server.put(`/api/users/:id`, (req, res)=>{
+    const date = new Date().toISOString().substr(0, 19).replace('T', ' ');
+
     if (!req.body.name || !req.body.bio){
         res.status(400).json({errorMessage: "Please provide name and bio for the user."})
     } else {
-        Users.update(req.params.id, req.body)
+        Users.update(req.params.id, {...req.body, updated_at: date})
         .then(updated => {
             if (updated === 1){
-                res.status(200).json({id: req.params.id, ...req.body})
+                res.status(200).json({id: req.params.id, ...req.body, updated_at: date})
             }
             else {
                 res.status(404).json({message: "The user with the specified ID does not exist."})
